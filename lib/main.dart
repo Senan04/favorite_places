@@ -1,25 +1,8 @@
 import 'package:favorite_places/screens/places.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:google_fonts/google_fonts.dart';
-
-// final colorScheme = ColorScheme.fromSeed(
-//   brightness: Brightness.light,
-//   seedColor: const Color.fromARGB(255, 37, 126, 243),
-//   surface: const Color.fromARGB(255, 15, 101, 151),
-// );
-
-// final theme = ThemeData(
-//   colorScheme: ColorScheme.fromSeed(
-//     brightness: Brightness.dark,
-//     seedColor: const Color.fromARGB(255, 182, 255, 47),
-//   ),
-//   scaffoldBackgroundColor: const Color.fromARGB(255, 2, 44, 44),
-//   floatingActionButtonTheme: const FloatingActionButtonThemeData(
-//     backgroundColor: Color.fromARGB(255, 17, 121, 121),
-//   ),
-//   textTheme: GoogleFonts.latoTextTheme().apply(bodyColor: Colors.white),
-// );
 
 final colorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
@@ -33,9 +16,7 @@ final theme = ThemeData().copyWith(
 );
 
 void main() {
-  runApp(
-    const MyApp(),
-  );
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

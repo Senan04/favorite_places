@@ -1,26 +1,24 @@
 import 'package:favorite_places/models/place.dart';
+import 'package:favorite_places/providers/places_provider.dart';
 import 'package:favorite_places/screens/add_place.dart';
 import 'package:favorite_places/screens/place_details.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class Places extends StatefulWidget {
+class Places extends ConsumerStatefulWidget {
   const Places({super.key});
 
   @override
-  State<Places> createState() => _PlacesScreenState();
+  ConsumerState<Places> createState() => _PlacesScreenState();
 }
 
-class _PlacesScreenState extends State<Places> {
-  final List<Place> _favoritePlaces = [];
-
+class _PlacesScreenState extends ConsumerState<Places> {
   void _addItem() async {
     final addedPlace = await Navigator.of(context)
         .push(MaterialPageRoute(builder: (ctx) => const AddPlace()));
     if (addedPlace != null) {
-      setState(() {
-        _favoritePlaces.add(addedPlace);
-      });
+      ref.read(placesProvider.notifier).addPlace(addedPlace);
     }
   }
 
@@ -30,18 +28,17 @@ class _PlacesScreenState extends State<Places> {
   }
 
   void _removeItem(int index) {
-    setState(() {
-      _favoritePlaces.removeAt(index);
-    });
+    ref.read(placesProvider.notifier).removePlaceAt(index);
   }
 
   Widget get _content {
-    if (_favoritePlaces.isEmpty) {
+    final favoritePlaces = ref.watch(placesProvider);
+    if (favoritePlaces.isEmpty) {
       return const Center(
           child: Text('You do not have any favorite places yet!'));
     }
     return ListView.builder(
-      itemCount: _favoritePlaces.length,
+      itemCount: favoritePlaces.length,
       itemBuilder: (ctx, index) => Slidable(
         endActionPane: ActionPane(
           motion: const BehindMotion(),
@@ -55,8 +52,8 @@ class _PlacesScreenState extends State<Places> {
           ],
         ),
         child: ListTile(
-          title: Text(_favoritePlaces[index].name),
-          onTap: () => {_showDetails(_favoritePlaces[index])},
+          title: Text(favoritePlaces[index].name),
+          onTap: () => {_showDetails(favoritePlaces[index])},
         ),
       ),
     );

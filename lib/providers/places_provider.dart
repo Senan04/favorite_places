@@ -8,9 +8,9 @@ class PlacesNotifier extends StateNotifier<List<Place>> {
     state = [...state, place];
   }
 
-  void removePlace(Place place) {
+  void removePlaceAt(int index) {
     var stateCopy = List.of(state);
-    stateCopy.remove(place);
+    stateCopy.removeAt(index);
     state = stateCopy;
   }
 }
