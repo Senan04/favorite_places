@@ -1,4 +1,5 @@
 import 'package:favorite_places/models/place.dart';
+import 'package:favorite_places/widgets/image_input.dart';
 import 'package:flutter/material.dart';
 
 class AddPlace extends StatefulWidget {
@@ -35,7 +36,7 @@ class _AddPlaceScreenState extends State<AddPlace> {
                   if (value == null ||
                       value.isEmpty ||
                       value.trim().length <= 1) {
-                    return 'Must be between 1 and 50 characters';
+                    return 'Must be between 2 and 50 characters';
                   }
                   return null;
                 },
@@ -45,6 +46,10 @@ class _AddPlaceScreenState extends State<AddPlace> {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 15,
+            ),
+            const ImageInput(),
             const SizedBox(
               height: 15,
             ),
