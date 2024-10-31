@@ -8,20 +8,29 @@ class ImageInput extends StatefulWidget {
 }
 
 class _ImageInputState extends State<ImageInput> {
+  var pictureAdded = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         border: Border.all(
           width: 2,
         ),
         color: Colors.white10,
       ),
-      child: const SizedBox(
+      child: SizedBox(
         height: 250,
         width: double.infinity,
         child: Center(
-          child: Text('TEST'),
+          child: pictureAdded
+              ? const Placeholder()
+              : TextButton.icon(
+                  onPressed: () {},
+                  label: const Text('Add a picture'),
+                  icon: const Icon(Icons.camera),
+                ),
         ),
       ),
     );
