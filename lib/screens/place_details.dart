@@ -12,7 +12,16 @@ class PlaceDetails extends StatelessWidget {
       appBar: AppBar(
         title: Text(place.name),
       ),
-      body: const Placeholder(),
+      body: Stack(
+        children: [
+          Image.file(
+            place.picture,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+        ],
+      ),
     );
   }
 }

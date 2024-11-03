@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:favorite_places/models/place.dart';
 import 'package:favorite_places/widgets/image_input.dart';
+import 'package:favorite_places/widgets/location_input.dart';
 import 'package:flutter/material.dart';
 
 class AddPlace extends StatefulWidget {
@@ -58,6 +59,10 @@ class _AddPlaceScreenState extends State<AddPlace> {
                 _takenPicture = takenPicture;
               },
             ),
+            const SizedBox(
+              height: 15,
+            ),
+            const LocationInput(),
             const SizedBox(
               height: 15,
             ),

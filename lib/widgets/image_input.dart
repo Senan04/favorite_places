@@ -35,6 +35,8 @@ class _ImageInputState extends State<ImageInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 250,
+      width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         border: Border.all(
@@ -42,26 +44,22 @@ class _ImageInputState extends State<ImageInput> {
         ),
         color: Colors.white10,
       ),
-      child: SizedBox(
-        height: 250,
-        width: double.infinity,
-        child: Center(
-          child: pictureAdded
-              ? GestureDetector(
-                  onTap: _takePicture,
-                  child: Image.file(
-                    _takenPicture!,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                  ),
-                )
-              : TextButton.icon(
-                  onPressed: _takePicture,
-                  label: const Text('Add a picture'),
-                  icon: const Icon(Icons.camera),
+      child: Center(
+        child: pictureAdded
+            ? GestureDetector(
+                onTap: _takePicture,
+                child: Image.file(
+                  _takenPicture!,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
                 ),
-        ),
+              )
+            : TextButton.icon(
+                onPressed: _takePicture,
+                label: const Text('Add a picture'),
+                icon: const Icon(Icons.camera),
+              ),
       ),
     );
   }
