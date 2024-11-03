@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:favorite_places/models/place.dart';
 import 'package:favorite_places/widgets/image_input.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +14,13 @@ class AddPlace extends StatefulWidget {
 class _AddPlaceScreenState extends State<AddPlace> {
   final _formKey = GlobalKey<FormState>();
   var _enteredTitle = '';
+  File? _takenPicture;
 
   void _saveItem() {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
-    Navigator.of(context).pop(Place(_enteredTitle));
+    if (_takenPicture == null) return;
+    Navigator.of(context).pop(Place(_enteredTitle, _takenPicture!));
   }
 
   @override
@@ -49,7 +53,11 @@ class _AddPlaceScreenState extends State<AddPlace> {
             const SizedBox(
               height: 15,
             ),
-            const ImageInput(),
+            ImageInput(
+              onPictureTaken: (takenPicture) {
+                _takenPicture = takenPicture;
+              },
+            ),
             const SizedBox(
               height: 15,
             ),
