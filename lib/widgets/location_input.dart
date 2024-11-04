@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({super.key});
@@ -8,6 +9,40 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
+  var _gettingLocation = false;
+
+  void _getCurrentLocation() async {
+    Location location = Location();
+
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+    LocationData locationData;
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        return;
+      }
+    }
+
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    setState(() {
+      _gettingLocation = true;
+    });
+    locationData = await location.getLocation();
+    setState(() {
+      _gettingLocation = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,12 +58,14 @@ class _LocationInputState extends State<LocationInput> {
             color: Colors.white10,
           ),
           child: Center(
-            child: Text(
-              'No location chosen',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-            ),
+            child: _gettingLocation
+                ? const CircularProgressIndicator()
+                : Text(
+                    'No location chosen',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ),
           ),
         ),
         const SizedBox(
@@ -38,7 +75,7 @@ class _LocationInputState extends State<LocationInput> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextButton.icon(
-              onPressed: () {},
+              onPressed: _getCurrentLocation,
               label: const Text('Get Current Location'),
               icon: Icon(Icons.location_on_outlined),
             ),
