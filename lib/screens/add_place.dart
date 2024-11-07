@@ -16,12 +16,17 @@ class _AddPlaceScreenState extends State<AddPlace> {
   final _formKey = GlobalKey<FormState>();
   var _enteredTitle = '';
   File? _takenPicture;
+  PlaceLocation? _userLocation;
 
   void _saveItem() {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
     if (_takenPicture == null) return;
-    Navigator.of(context).pop(Place(_enteredTitle, _takenPicture!));
+    if (_userLocation == null) return;
+    Navigator.of(context).pop(Place(
+        name: _enteredTitle,
+        picture: _takenPicture!,
+        placeLocation: _userLocation!));
   }
 
   @override
@@ -62,7 +67,11 @@ class _AddPlaceScreenState extends State<AddPlace> {
             const SizedBox(
               height: 15,
             ),
-            const LocationInput(),
+            LocationInput(
+              onLocationPicked: (userLocation) {
+                _userLocation = userLocation;
+              },
+            ),
             const SizedBox(
               height: 15,
             ),
