@@ -21,6 +21,7 @@ class _AddPlaceScreenState extends State<AddPlace> {
   void _saveItem() {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
+    //TODO: show error to user instead of just returning
     if (_takenPicture == null) return;
     if (_userLocation == null) return;
     Navigator.of(context).pop(Place(
@@ -37,50 +38,52 @@ class _AddPlaceScreenState extends State<AddPlace> {
       ),
       body: Form(
         key: _formKey,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: TextFormField(
-                validator: (value) {
-                  if (value == null ||
-                      value.isEmpty ||
-                      value.trim().length <= 1) {
-                    return 'Must be between 2 and 50 characters';
-                  }
-                  return null;
-                },
-                onSaved: (newValue) => _enteredTitle = newValue!,
-                decoration: const InputDecoration(
-                  label: Text('Title'),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: TextFormField(
+                  validator: (value) {
+                    if (value == null ||
+                        value.isEmpty ||
+                        value.trim().length <= 1) {
+                      return 'Must be between 2 and 50 characters';
+                    }
+                    return null;
+                  },
+                  onSaved: (newValue) => _enteredTitle = newValue!,
+                  decoration: const InputDecoration(
+                    label: Text('Title'),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            ImageInput(
-              onPictureTaken: (takenPicture) {
-                _takenPicture = takenPicture;
-              },
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            LocationInput(
-              onLocationPicked: (userLocation) {
-                _userLocation = userLocation;
-              },
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            ElevatedButton.icon(
-              onPressed: _saveItem,
-              label: const Text('Add Place'),
-              icon: const Icon(Icons.add),
-            ),
-          ],
+              const SizedBox(
+                height: 15,
+              ),
+              ImageInput(
+                onPictureTaken: (takenPicture) {
+                  _takenPicture = takenPicture;
+                },
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              LocationInput(
+                onLocationPicked: (userLocation) {
+                  _userLocation = userLocation;
+                },
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              ElevatedButton.icon(
+                onPressed: _saveItem,
+                label: const Text('Add Place'),
+                icon: const Icon(Icons.add),
+              ),
+            ],
+          ),
         ),
       ),
     );

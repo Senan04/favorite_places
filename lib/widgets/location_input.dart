@@ -18,6 +18,12 @@ class _LocationInputState extends State<LocationInput> {
   var _gettingLocation = false;
   PlaceLocation? _pickedLocation;
 
+  String get locationImageUrl {
+    final lat = _pickedLocation!.latitude;
+    final lng = _pickedLocation!.longitude;
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:green%7Clabel:S%7C$lat,$lng&key=AIzaSyCGG8UmG23S_Oyb3x_XW0gk4BJ7VbUtRXQ';
+  }
+
   void _getCurrentLocation() async {
     Location location = Location();
 
@@ -67,6 +73,26 @@ class _LocationInputState extends State<LocationInput> {
     widget.onLocationPicked(_pickedLocation!);
   }
 
+  Widget get _content {
+    return _pickedLocation == null
+        ? Center(
+            child: _gettingLocation
+                ? const CircularProgressIndicator()
+                : Text(
+                    'No location chosen',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+          )
+        : Image.network(
+            locationImageUrl,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -81,16 +107,7 @@ class _LocationInputState extends State<LocationInput> {
             ),
             color: Colors.white10,
           ),
-          child: Center(
-            child: _gettingLocation
-                ? const CircularProgressIndicator()
-                : Text(
-                    'No location chosen',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                  ),
-          ),
+          child: _content,
         ),
         const SizedBox(
           height: 15,
