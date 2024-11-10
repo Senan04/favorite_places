@@ -6,6 +6,12 @@ class PlaceDetails extends StatelessWidget {
 
   final Place place;
 
+  String get locationImageUrl {
+    final lat = place.placeLocation.latitude;
+    final lng = place.placeLocation.longitude;
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:green%7Clabel:S%7C$lat,$lng&key=AIzaSyAYs5UJoXdFBn89eHWp4QQhFqtTgBCzS-Y';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,6 +25,39 @@ class PlaceDetails extends StatelessWidget {
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(locationImageUrl),
+                  radius: 70,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        Colors.black54,
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                  child: Text(
+                    place.placeLocation.address,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
