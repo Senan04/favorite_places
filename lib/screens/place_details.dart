@@ -54,6 +54,7 @@ class PlaceDetails extends StatelessWidget {
                   child: Text(
                     place.placeLocation.address,
                     textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleSmall,
                   ),
                 ),
               ],
