@@ -22,8 +22,7 @@ class _AddPlaceScreenState extends State<AddPlace> {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
     //TODO: show error to user instead of just returning
-    if (_takenPicture == null) return;
-    if (_userLocation == null) return;
+    if (_takenPicture == null || _userLocation == null) return;
     Navigator.of(context).pop(Place(
         name: _enteredTitle,
         picture: _takenPicture!,

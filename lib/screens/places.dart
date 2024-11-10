@@ -54,8 +54,20 @@ class _PlacesScreenState extends ConsumerState<Places> {
         child: ListTile(
           leading: CircleAvatar(
             backgroundImage: FileImage(favoritePlaces[index].picture),
+            radius: 30,
           ),
-          title: Text(favoritePlaces[index].name),
+          title: Text(
+            favoritePlaces[index].name,
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+          ),
+          subtitle: Text(
+            favoritePlaces[index].placeLocation.address,
+            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+          ),
           onTap: () => {_showDetails(favoritePlaces[index])},
         ),
       ),
