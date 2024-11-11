@@ -4,6 +4,7 @@ import 'package:favorite_places/models/place.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({super.key, required this.onLocationPicked});
@@ -17,11 +18,12 @@ class LocationInput extends StatefulWidget {
 class _LocationInputState extends State<LocationInput> {
   var _gettingLocation = false;
   PlaceLocation? _pickedLocation;
+  final mapsAPIKey = dotenv.env['API_KEY'];
 
   String get locationImageUrl {
     final lat = _pickedLocation!.latitude;
     final lng = _pickedLocation!.longitude;
-    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:green%7Clabel:S%7C$lat,$lng&key=AIzaSyCGG8UmG23S_Oyb3x_XW0gk4BJ7VbUtRXQ';
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:green%7Clabel:S%7C$lat,$lng&key=$mapsAPIKey';
   }
 
   void _getCurrentLocation() async {
@@ -52,22 +54,22 @@ class _LocationInputState extends State<LocationInput> {
     });
 
     locationData = await location.getLocation();
-    final latitude = locationData.latitude;
-    final longitude = locationData.longitude;
-    if (latitude == null || longitude == null) {
+    final lat = locationData.latitude;
+    final lng = locationData.longitude;
+    if (lat == null || lng == null) {
       return;
       //TODO Fehleranzeige, auch für HTTP request unten
     }
 
     final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${locationData.latitude},${locationData.longitude}&key=AIzaSyCGG8UmG23S_Oyb3x_XW0gk4BJ7VbUtRXQ');
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$mapsAPIKey');
     final response = await http.get(url);
     final responseData = json.decode(response.body);
     final address = responseData['results'][0]['formatted_address'];
 
     setState(() {
-      _pickedLocation = PlaceLocation(
-          latitude: latitude, longitude: longitude, address: address);
+      _pickedLocation =
+          PlaceLocation(latitude: lat, longitude: lng, address: address);
       _gettingLocation = false;
     });
     widget.onLocationPicked(_pickedLocation!);
