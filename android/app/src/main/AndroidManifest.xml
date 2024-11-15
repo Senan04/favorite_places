@@ -5,7 +5,7 @@
         android:icon="@mipmap/ic_launcher">
         <!-- MAPS_API_KEY aus gradle.properties, welches in git.ignore enthalten ist -->
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="${MAPS_API_KEY}"/>
+               android:value="AIzaSyBGOnajVDNEkNKYwPaHz6c1HG2BjDrNmmk"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
