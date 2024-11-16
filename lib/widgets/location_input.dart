@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:favorite_places/models/place.dart';
+import 'package:favorite_places/screens/map.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -23,7 +25,31 @@ class _LocationInputState extends State<LocationInput> {
   String get locationImageUrl {
     final lat = _pickedLocation!.latitude;
     final lng = _pickedLocation!.longitude;
-    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:green%7Clabel:S%7C$lat,$lng&key=$mapsAPIKey';
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:S%7C$lat,$lng&key=$mapsAPIKey';
+  }
+
+  void _savePlace(double lat, double lng) async {
+    final url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$mapsAPIKey');
+    final response = await http.get(url);
+    final responseData = json.decode(response.body);
+    final address = responseData['results'][0]['formatted_address'];
+
+    setState(() {
+      _pickedLocation =
+          PlaceLocation(latitude: lat, longitude: lng, address: address);
+      _gettingLocation = false;
+    });
+    widget.onLocationPicked(_pickedLocation!);
+  }
+
+  void _chooseOnMap() async {
+    final pickedLocation = await Navigator.of(context)
+        .push<LatLng>(MaterialPageRoute(builder: (ctx) => MapScreen()));
+
+    if (pickedLocation != null) {
+      _savePlace(pickedLocation.latitude, pickedLocation.longitude);
+    }
   }
 
   void _getCurrentLocation() async {
@@ -58,21 +84,9 @@ class _LocationInputState extends State<LocationInput> {
     final lng = locationData.longitude;
     if (lat == null || lng == null) {
       return;
-      //TODO Fehleranzeige, auch für HTTP request unten
+      //TODO Fehleranzeige, auch für HTTP request
     }
-
-    final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$mapsAPIKey');
-    final response = await http.get(url);
-    final responseData = json.decode(response.body);
-    final address = responseData['results'][0]['formatted_address'];
-
-    setState(() {
-      _pickedLocation =
-          PlaceLocation(latitude: lat, longitude: lng, address: address);
-      _gettingLocation = false;
-    });
-    widget.onLocationPicked(_pickedLocation!);
+    _savePlace(lat, lng);
   }
 
   Widget get _content {
@@ -123,7 +137,7 @@ class _LocationInputState extends State<LocationInput> {
               icon: Icon(Icons.location_on_outlined),
             ),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: _chooseOnMap,
               label: const Text('Select on Map'),
               icon: Icon(Icons.map_outlined),
             ),

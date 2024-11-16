@@ -12,7 +12,7 @@ class PlaceDetails extends StatelessWidget {
   String get locationImageUrl {
     final lat = place.placeLocation.latitude;
     final lng = place.placeLocation.longitude;
-    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:green%7Clabel:S%7C$lat,$lng&key=$mapsAPIKey';
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:S%7C$lat,$lng&key=$mapsAPIKey';
   }
 
   @override

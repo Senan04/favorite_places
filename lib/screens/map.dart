@@ -6,9 +6,9 @@ class MapScreen extends StatefulWidget {
   const MapScreen({
     super.key,
     this.location = const PlaceLocation(
-      latitude: 37.422,
-      longitude: -122.084,
-      address: '',
+      latitude: 48.137371,
+      longitude: 11.575328,
+      address: 'Marienplatz',
     ),
     this.isSelecting = true,
   });
@@ -21,6 +21,8 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  LatLng? _pickedLocation;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,12 +32,17 @@ class _MapScreenState extends State<MapScreen> {
         actions: [
           if (widget.isSelecting)
             IconButton(
-              onPressed: () {},
+              onPressed: () => Navigator.of(context).pop(_pickedLocation),
               icon: const Icon(Icons.save_alt),
             ),
         ],
       ),
       body: GoogleMap(
+        onTap: !widget.isSelecting
+            ? null
+            : (position) => setState(() {
+                  _pickedLocation = position;
+                }),
         initialCameraPosition: CameraPosition(
           target: LatLng(
             widget.location.latitude,
@@ -43,15 +50,18 @@ class _MapScreenState extends State<MapScreen> {
           ),
           zoom: 16,
         ),
-        markers: {
-          Marker(
-            markerId: MarkerId('Hard coded'),
-            position: LatLng(
-              widget.location.latitude,
-              widget.location.longitude,
-            ),
-          )
-        },
+        markers: (_pickedLocation == null && widget.isSelecting)
+            ? {}
+            : {
+                Marker(
+                  markerId: MarkerId('Hard coded'),
+                  position: _pickedLocation ??
+                      LatLng(
+                        widget.location.latitude,
+                        widget.location.longitude,
+                      ),
+                )
+              },
       ),
     );
   }
