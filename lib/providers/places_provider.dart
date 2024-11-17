@@ -21,7 +21,7 @@ Future<Database> _getDatabase() async {
 class PlacesNotifier extends StateNotifier<List<Place>> {
   PlacesNotifier() : super(const []);
 
-  void loadPlaces() async {
+  Future<void> loadPlaces() async {
     final db = await _getDatabase();
     final data = await db.query('places');
     final places = data
@@ -59,8 +59,16 @@ class PlacesNotifier extends StateNotifier<List<Place>> {
     state = [...state, place];
   }
 
-  void removePlaceAt(int index) {
+  void removePlaceAt(int index) async {
     var stateCopy = List.of(state);
+
+    final database = await _getDatabase();
+    database.delete(
+      'places',
+      where: 'id = ?',
+      whereArgs: [stateCopy[index].id],
+    );
+
     stateCopy.removeAt(index);
     state = stateCopy;
   }

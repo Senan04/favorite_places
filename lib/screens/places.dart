@@ -10,16 +10,21 @@ class Places extends ConsumerStatefulWidget {
   const Places({super.key});
 
   @override
-  ConsumerState<Places> createState() => _PlacesScreenState();
+  ConsumerState<Places> createState() => _PlacesState();
 }
 
-class _PlacesScreenState extends ConsumerState<Places> {
+class _PlacesState extends ConsumerState<Places> {
+  late Future<void> _placesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _placesFuture = ref.read(placesProvider.notifier).loadPlaces();
+  }
+
   void _addItem() async {
     final placeDetails = await Navigator.of(context)
         .push(MaterialPageRoute(builder: (ctx) => const AddPlace()));
-    // if (addedPlace != null) {
-    //   ref.read(placesProvider.notifier).addPlace(addedPlace);
-    // }
     if (placeDetails != null) {
       ref.read(placesProvider.notifier).addPlace(placeDetails['name'],
           placeDetails['picture'], placeDetails['placeLocation']);
@@ -88,7 +93,13 @@ class _PlacesScreenState extends ConsumerState<Places> {
         onPressed: _addItem,
         child: const Icon(Icons.add),
       ),
-      body: _content,
+      body: FutureBuilder(
+        future: _placesFuture,
+        builder: (ctx, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? const Center(child: CircularProgressIndicator())
+                : _content,
+      ),
     );
   }
 }
