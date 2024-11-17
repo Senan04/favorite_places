@@ -12,12 +12,26 @@ class PlaceLocation {
 }
 
 class Place {
-  Place(
-      {required this.name, required this.picture, required this.placeLocation})
-      : id = const Uuid().v4();
+  Place({
+    required this.name,
+    required this.picture,
+    required this.placeLocation,
+    String? id,
+  }) : id = id ?? const Uuid().v4();
 
   final String name;
   final String id;
   File picture;
   final PlaceLocation placeLocation;
+
+  Map<String, Object> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'image': picture.path,
+      'latitude': placeLocation.latitude,
+      'longitude': placeLocation.longitude,
+      'address': placeLocation.address,
+    };
+  }
 }
