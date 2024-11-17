@@ -15,10 +15,14 @@ class Places extends ConsumerStatefulWidget {
 
 class _PlacesScreenState extends ConsumerState<Places> {
   void _addItem() async {
-    final addedPlace = await Navigator.of(context)
+    final placeDetails = await Navigator.of(context)
         .push(MaterialPageRoute(builder: (ctx) => const AddPlace()));
-    if (addedPlace != null) {
-      ref.read(placesProvider.notifier).addPlace(addedPlace);
+    // if (addedPlace != null) {
+    //   ref.read(placesProvider.notifier).addPlace(addedPlace);
+    // }
+    if (placeDetails != null) {
+      ref.read(placesProvider.notifier).addPlace(placeDetails['name'],
+          placeDetails['picture'], placeDetails['placeLocation']);
     }
   }
 

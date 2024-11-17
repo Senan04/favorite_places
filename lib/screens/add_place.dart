@@ -23,10 +23,11 @@ class _AddPlaceScreenState extends State<AddPlace> {
     _formKey.currentState!.save();
     //TODO: show error to user instead of just returning
     if (_takenPicture == null || _userLocation == null) return;
-    Navigator.of(context).pop(Place(
-        name: _enteredTitle,
-        picture: _takenPicture!,
-        placeLocation: _userLocation!));
+    Navigator.of(context).pop({
+      'name': _enteredTitle,
+      'picture': _takenPicture!,
+      'placeLocation': _userLocation!
+    });
   }
 
   @override
